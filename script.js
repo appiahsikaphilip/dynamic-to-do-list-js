@@ -1,53 +1,113 @@
-// script.js - Dynamic To-Do List Application
-
-// Wait for DOM to be fully loaded before running the script
-document.addEventListener('DOMContentLoaded', function () {
-    // Select DOM elements
-    const addButton = document.getElementById('add-task-btn');
-    const taskInput = document.getElementById('task-input');
-    const taskList = document.getElementById('task-list');
-
-    // Function to add a new task to the list
-    function addTask() {
-        // Get trimmed text from the input field
-        const taskText = taskInput.value.trim();
-
-        // If the task is empty, alert the user and stop
-        if (taskText === '') {
-            alert('Please enter a task.');
-            return;
-        }
-
-        // Create a new list item and set its text
-        const li = document.createElement('li');
-        li.textContent = taskText;
-
-        // Create a remove button for this task
-        const removeBtn = document.createElement('button');
-        removeBtn.textContent = 'Remove';
-        removeBtn.classList.add('remove-btn');
+// script.js - Dynamic To-Do List Application with Local Storage
+const removeBtn = document.createElement('button');
+removeBtn.textContent = 'Remove';
+removeBtn.classList.add('remove-btn');
 
 
-        // When the remove button is clicked, remove the li from the task list
-        removeBtn.onclick = function () {
-            taskList.removeChild(li);
-        };
+// Remove task from DOM and update localStorage
+removeBtn.onclick = function () {
+const index = tasks.indexOf(taskText);
+if (index > -1) {
+tasks.splice(index, 1);
+saveTasks();
+}
+taskList.removeChild(li);
+};
 
-        // Append the remove button to the list item, then append the item to the list
-        li.appendChild(removeBtn);
-        taskList.appendChild(li);
 
-        // Clear the input field
-        taskInput.value = '';
-    }
+li.appendChild(removeBtn);
+taskList.appendChild(li);
 
-    // Attach event listener to the Add Task button
-    addButton.addEventListener('click', addTask);
 
-    // Allow adding tasks by pressing Enter in the input field
-    taskInput.addEventListener('keypress', function (event) {
-        if (event.key === 'Enter') {
-            addTask();
-        }
-    });
+// Persist task if requested
+if (save) {
+tasks.push(taskText);
+saveTasks();
+}
+
+
+// Clear and focus input
+taskInput.value = '';
+taskInput.focus();
+
+
+
+// Load tasks from localStorage and render them
+function loadTasks() {
+const stored = JSON.parse(localStorage.getItem('tasks') || '[]');
+tasks = Array.isArray(stored) ? stored : [];
+tasks.forEach(t => addTask(t, false));
+}
+
+
+// Attach event listener to the Add Task button
+addButton.addEventListener('click', function () { addTask(); });
+
+
+// Allow adding tasks by pressing Enter in the input field
+taskInput.addEventListener('keypress', function (event) {
+if (event.key === 'Enter') {
+addTask();
+}
 });
+
+
+// Initialize by loading existing tasks from localStorage
+loadTasks();
+;// script.js - Dynamic To-Do List Application with Local Storage
+const removeBtn = document.createElement('button');
+removeBtn.textContent = 'Remove';
+removeBtn.classList.add('remove-btn');
+
+
+// Remove task from DOM and update localStorage
+removeBtn.onclick = function () {
+const index = tasks.indexOf(taskText);
+if (index > -1) {
+tasks.splice(index, 1);
+saveTasks();
+}
+taskList.removeChild(li);
+};
+
+
+li.appendChild(removeBtn);
+taskList.appendChild(li);
+
+
+// Persist task if requested
+if (save) {
+tasks.push(taskText);
+saveTasks();
+}
+
+
+// Clear and focus input
+taskInput.value = '';
+taskInput.focus();
+
+
+
+// Load tasks from localStorage and render them
+function loadTasks() {
+const stored = JSON.parse(localStorage.getItem('tasks') || '[]');
+tasks = Array.isArray(stored) ? stored : [];
+tasks.forEach(t => addTask(t, false));
+}
+
+
+// Attach event listener to the Add Task button
+addButton.addEventListener('click', function () { addTask(); });
+
+
+// Allow adding tasks by pressing Enter in the input field
+taskInput.addEventListener('keypress', function (event) {
+if (event.key === 'Enter') {
+addTask();
+}
+});
+
+
+// Initialize by loading existing tasks from localStorage
+loadTasks();
+;
